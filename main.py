@@ -37,7 +37,7 @@ def compute_term_freq_matrix(X,corpus):
         tfm = pd.concat([tfm, compute_tfm_column(x,corpus)], axis=1)
     return tfm
 
-def compute_tfm_column(tweet, corpus, smooth_factor=0.1):
+def compute_tfm_column(tweet, corpus, smooth_factor=0.01):
     '''
     Returns m x 1 column vector of the frequency of the ith word of the corpus in the tweet
     '''
