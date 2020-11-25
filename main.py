@@ -15,30 +15,25 @@ def main():
 
     # Pre-process the data. Lower-case, strip https links, tokenize.
     train['tokenized'] = train['text'].apply(lambda x: (preprocess(x)))
+    test ['tokenized'] = test ['text'].apply(lambda x: (preprocess(x)))
+    # Convert string to bool: label->Ground Truth
+    train['GT'] = train['label'].apply(lambda x:(to_bool(x)))
+    test['GT'] = test['label'].apply(lambda x:(to_bool(x)))
 
 
     # Initialize classifier and fit
     nbc = NaivesBayesClassifier(filtered=False)
-    nbc.fit(train['tokenized'],train['label'])
+    nbc.fit(train['tokenized'],train['GT'])
+    nbc.predict(test['tokenized'],test['GT'], analyse=True, prior=False)
 
 
-def freqs_dictionnary(result,X_train,y_train,corpus):
-    for y, x in zip(y_train, X_train):
-        for word in x:
-            if word in corpus:
-                # define the key, which is the word and label tuple
-                pair = (word,y)
-
-                # if the key exists in the dictionary, increment the count
-                if pair in result:
-                    result[pair] += 1
-
-                # else, if the key is new, add it to the dictionary and set the count to 1
-                else:
-                    result[pair] = 1
-    return result
 
 
+def to_bool(text):
+    if text=='no':
+        return False
+    else:
+        return True
 
 
 def preprocess(text):
