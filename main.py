@@ -15,11 +15,25 @@ def main():
 
     # Pre-process the data. Lower-case, strip https links, tokenize.
     train['tokenized'] = train['text'].apply(lambda x: (preprocess(x)))
+    test ['tokenized'] = test ['text'].apply(lambda x: (preprocess(x)))
+    # Convert string to bool: label->Ground Truth
+    train['GT'] = train['label'].apply(lambda x:(to_bool(x)))
+    test['GT'] = test['label'].apply(lambda x:(to_bool(x)))
 
 
     # Initialize classifier and fit
     nbc = NaivesBayesClassifier(filtered=False)
-    nbc.fit(train['tokenized'],train['label'])
+    nbc.fit(train['tokenized'],train['GT'])
+    nbc.predict(test['tokenized'],test['GT'], analyse=True, prior=False)
+
+
+
+
+def to_bool(text):
+    if text=='no':
+        return False
+    else:
+        return True
 
 
 def preprocess(text):
