@@ -10,41 +10,17 @@ def main():
     # Drop useless columns & rename label
     train = train.drop(['q2_label', 'q3_label', 'q4_label', 'q5_label', 'q6_label', 'q7_label'], axis=1)
     test = test.drop(['q2_label', 'q3_label', 'q4_label', 'q5_label', 'q6_label', 'q7_label'], axis=1)
-    # train.rename(columns={'q1_label': 'label'})
-    # test.rename(columns={'q1_label': 'label'})
+    train = train.rename(columns={'q1_label': 'label'})
+    test = test.rename(columns={'q1_label': 'label'})
 
     # Pre-process the data. Lower-case, strip https links, tokenize.
     train['tokenized'] = train['text'].apply(lambda x: (preprocess(x)))
 
-    # Get corpus (all the words in vocabulary)
-    corpus = get_corpus(train['tokenized'])
-    X_train = train['tokenized']
-    y_train = train['q1_label']
-  
-    # Compute the Term Frequency Matrix use for training
-    freqs_dict={}
-    freqs_dictionnary(freqs_dict,X_train,y_train,corpus)
 
-    #Initialize classifier and fit
-    nbc = NaiveBayesClassifier(freqs_dict,smooth_factor)
-    nbc.fit(X_train,y_train)
+    # Initialize classifier and fit
+    nbc = NaivesBayesClassifier(filtered=False)
+    nbc.fit(train['tokenized'],train['label'])
 
-def compute_term_freq_matrix(X,corpus):
-    '''
-    Returns m x n term frequency matrix, where m is the vocabulary size and n is the number of instances in X.
-    Element (i,j) is the frequency of word i in tweet j
-    '''
-    tfm = pd.DataFrame(index=corpus)
-    for x in X:
-        tfm = pd.concat([tfm, compute_tfm_column(x,corpus)], axis=1)
-    return tfm
-
-def compute_tfm_column(tweet, corpus, smooth_factor=0.01):
-    '''
-    Returns m x 1 column vector of the frequency of the ith word of the corpus in the tweet
-    '''
-    freqs=[(tweet.count(word)+smooth_factor)/(len(tweet)+(smooth_factor*len(corpus))) for word in corpus]
-    return pd.DataFrame(freqs, index=corpus)
 
 def freqs_dictionnary(result,X_train,y_train,corpus):
     for y, x in zip(y_train, X_train):
@@ -74,13 +50,6 @@ def preprocess(text):
     text= re.sub(r'http\S+', '', text) #remove https links strings
     return text.split()
 
-def get_corpus(tokenized,filtered=False):
-    '''
-    Returns the corpus of all tweets. If filtered is true, only returns words that appear at least twice
-    '''
-    if filtered:
-        return tokenized.explode().unique()[tokenized.explode().value_counts() > 1]
-    return tokenized.explode().unique()
 
 if __name__ == "__main__":
     main()
