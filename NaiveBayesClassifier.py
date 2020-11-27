@@ -94,14 +94,11 @@ class NaivesBayesClassifier:
         self.create_Trace_file(tweet_id,predictions,y_test,scores)
         self.create_Eval_file(accuracy,precisions,recalls,f1s)
 
-        
-
-            
     def create_Trace_file(self,ids,predictions,Truths,scores):
         if self.filtered:
             path='trace_NB-BOW-FV.txt'
         else:
-            path='trace_NB-BOW-FV.txt'
+            path='trace_NB-BOW-OV.txt'
         with open(path,'+w') as f:
             for i in range(len(ids)):
                 pred='yes' if predictions[i] else 'no'
@@ -113,18 +110,12 @@ class NaivesBayesClassifier:
         if self.filtered:
             path='eval_NB-BOW-FV.txt'
         else:
-            path='eval_NB-BOW-FV.txt'
+            path='eval_NB-BOW-OV.txt'
         with open(path,'+w') as f:
             f.write('{:.4f}\n'.format(acc))
             f.write('{:.4f}  {:.4f}\n'.format(precisions[0],precisions[1]))
             f.write('{:.4f}  {:.4f}\n'.format(recalls[0],recalls[1]))
             f.write('{:.4f}  {:.4f}'.format(f1s[0],f1s[1]))
-
-
-
-    
-    
-
 
 def freqs_dictionnary(result,X_train,y_train,corpus):
 

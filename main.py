@@ -25,6 +25,9 @@ def main():
     nbc = NaivesBayesClassifier(filtered=False)
     nbc.fit(train['tokenized'],train['GT'])
     nbc.predict(test['tokenized'],test['GT'],test['tweet_id'], analyse=True, prior=False)
+    nbc = NaivesBayesClassifier(filtered=True)
+    nbc.fit(train['tokenized'], train['GT'])
+    nbc.predict(test['tokenized'], test['GT'], test['tweet_id'], analyse=True, prior=False)
 
 
 
