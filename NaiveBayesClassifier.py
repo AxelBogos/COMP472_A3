@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import sklearn.metrics as skm
 class NaivesBayesClassifier:
     def __init__(self, filtered,smoothing=0.01):
         self.filtered = filtered
@@ -39,7 +40,7 @@ class NaivesBayesClassifier:
         D_neg = D-D_pos
 
         # Calculate logprior
-        self.log_prior = np.log(D_pos)-np.log(D_neg)
+        self.log_prior = np.log10(D_pos)-np.log10(D_neg)
 
         # For each word in the corpus
         for word in self.corpus:
@@ -52,13 +53,14 @@ class NaivesBayesClassifier:
             p_w_neg = (freq_neg+self.smoothing)/(N_neg+ len(self.corpus)*self.smoothing)
 
             # calculate the log likelihood of the word
-            self.log_likelihood[word] = np.log(p_w_pos)-np.log(p_w_neg)
+            self.log_likelihood[word] = np.log10(p_w_pos)-np.log10(p_w_neg)
 
-    def predict(self,X_test,y_test,analyse=False,prior=True):
+    def predict(self,X_test,y_test,tweet_id,analyse=False,prior=True):
         if analyse:
             print('Truth Predicted Tweet')
         
         predictions=[]
+        scores=[]
         for tweet, y in zip(X_test,y_test):
             # initialize probability to the log prior probability
             if prior:
@@ -70,7 +72,7 @@ class NaivesBayesClassifier:
                 if word in self.log_likelihood:
                     # add the log likelihood of that word to the probability
                     p += self.log_likelihood[word]
-
+            scores.append(p)
             #if probability >0 the Tweet is classified as Verified
             if p>0:
                 predictions.append(True)
@@ -82,17 +84,38 @@ class NaivesBayesClassifier:
                 if y != (p > 0):
                     print('{:d}\t{:.2f}\t{:s}'.format(y, p > 0,' '.join(tweet)))
 
-        # Calculate Accuracy
-        accuracy=np.sum(np.asarray(predictions)==y_test)/len(y_test)*100
-        print('Accuracy = {:.2f}%'.format(accuracy))
-        return predictions
+        # Calculate Metrics
+        accuracy=skm.accuracy_score(y_test,predictions)
+        precisions=skm.precision_score(y_test,predictions),skm.precision_score(y_test,predictions,pos_label=0)
+        recalls=skm.recall_score(y_test,predictions),skm.recall_score(y_test,predictions,pos_label=0)
+        f1s=skm.f1_score(y_test,predictions) ,skm.f1_score(y_test,predictions,pos_label=0)
 
+        #Write to files
+        self.create_Trace_file(tweet_id,predictions,y_test,scores)
+        self.create_Eval_file(accuracy,precisions,recalls,f1s)
 
-            
-            
-    
-    
+    def create_Trace_file(self,ids,predictions,Truths,scores):
+        if self.filtered:
+            path = 'trace_NB-BOW-FV.txt'
+        else:
+            path = 'trace_NB-BOW-OV.txt'
+        with open(path,'+w') as f:
+            for i in range(len(ids)):
+                pred='yes' if predictions[i] else 'no'
+                truth='yes' if Truths[i] else 'no'
+                result='correct' if pred==truth else 'wrong'
+                f.write('{:d}  {:s}  {:.2E}  {:s}  {:s}\n'.format(ids[i],pred,scores[i],truth,result))
 
+    def create_Eval_file(self,acc,precisions,recalls,f1s):
+        if self.filtered:
+            path='eval_NB-BOW-FV.txt'
+        else:
+            path='eval_NB-BOW-OV.txt'
+        with open(path,'+w') as f:
+            f.write('{:.4f}\n'.format(acc))
+            f.write('{:.4f}  {:.4f}\n'.format(precisions[0],precisions[1]))
+            f.write('{:.4f}  {:.4f}\n'.format(recalls[0],recalls[1]))
+            f.write('{:.4f}  {:.4f}'.format(f1s[0],f1s[1]))
 
 def freqs_dictionnary(result,X_train,y_train,corpus):
 
