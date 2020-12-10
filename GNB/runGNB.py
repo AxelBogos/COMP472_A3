@@ -50,6 +50,5 @@ def preprocess(text):
     text= re.sub(r'http\S+', '', text) #remove https links strings
     return text.split()
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

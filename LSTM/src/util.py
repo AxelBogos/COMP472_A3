@@ -84,7 +84,7 @@ def test(prediction, target, dataset=None, out=False):
     if out is not False:
         if dataset is None:
             raise ValueError("Dataset is needed to retrieve tweet ids!")
-        with open("trace_LSTM.txt", "w") as file:
+        with open("results/trace_lstm.txt", "w") as file:
             for i in range(len(dataset)):
                 tweet_id = dataset[i][2]
                 prediction_text = "yes" if pred(prediction[i]) == 1 else "no"
@@ -93,7 +93,7 @@ def test(prediction, target, dataset=None, out=False):
                 outcome = "correct" if prediction_text == target_text else "wrong"
                 line = """{}  {}  {:.4}  {}  {}\n""".format(tweet_id, prediction_text, prediction_proba, target_text, outcome)
                 file.write(line)
-        print("Trace file produced: 'trace_LSTM.txt'")
+        print("Trace file produced: 'results/trace_lstm.txt'")
     try:
         pre = precision_score(t, p)
         rec = recall_score(t, p)
@@ -127,9 +127,9 @@ def evaluateModel(model, prediction, target):
     except ValueError:
         f1_yes = pre_yes = rec_yes = 0
         f1_no = pre_no = rec_no = 0
-    with open("eval_lstm.txt", "w") as file:
+    with open("results/eval_lstm.txt", "w") as file:
         file.write("{:.4}\n".format(acc))
         file.write("{:.4}  {:.4}\n".format(pre_yes, pre_no))
         file.write("{:.4}  {:.4}\n".format(rec_yes, rec_no))
         file.write("{:.4}  {:.4}\n".format(f1_yes, f1_no))
-    print("Evaluation file produced: 'eval_lstm.txt'")
+    print("Evaluation file produced: 'results/eval_lstm.txt'")
