@@ -1,9 +1,13 @@
 import re
-from GNB.NaiveBayesClassifier import *
+import pandas as pd
+from GNB import *
+from GNB.NaiveBayesClassifier import NaivesBayesClassifier
+
+
 def main():
     # Load data
-    train = pd.read_csv('../data/covid_training.tsv', sep='\t')
-    test = pd.read_csv('../data/covid_test_public.tsv', sep='\t', names=train.columns) #load it with the same column names
+    train = pd.read_csv('data/covid_training.tsv', sep='\t')
+    test = pd.read_csv('data/covid_test_public.tsv', sep='\t', names=train.columns) #load it with the same column names
 
     # Drop useless columns & rename label
     train = train.drop(['q2_label', 'q3_label', 'q4_label', 'q5_label', 'q6_label', 'q7_label'], axis=1)
