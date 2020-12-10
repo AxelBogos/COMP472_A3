@@ -14,8 +14,8 @@
 import torch
 import gensim as gensim
 from tqdm import tqdm
-from src.model import EnsembleModel
-from src.util import TweetDataset, test, evaluateModel
+from LSTM.src.model import EnsembleModel
+from LSTM.src.util import TweetDataset, test, evaluateModel
 
 # ## Pre-run initialisation
 # We instantiate an object containing the pre-trained word embeddings and an object representing our classification
