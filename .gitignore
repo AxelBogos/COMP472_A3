@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# annoying
+*.txt
+
 # C extensions
 *.so
 
