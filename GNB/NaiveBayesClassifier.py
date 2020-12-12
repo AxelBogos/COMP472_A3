@@ -96,9 +96,9 @@ class NaivesBayesClassifier:
 
     def create_Trace_file(self,ids,predictions,Truths,scores):
         if self.filtered:
-            path = 'trace_NB-BOW-FV.txt'
+            path = 'results/trace_NB-BOW-FV.txt'
         else:
-            path = 'trace_NB-BOW-OV.txt'
+            path = 'results/trace_NB-BOW-OV.txt'
         with open(path,'+w') as f:
             for i in range(len(ids)):
                 pred='yes' if predictions[i] else 'no'
@@ -108,9 +108,9 @@ class NaivesBayesClassifier:
 
     def create_Eval_file(self,acc,precisions,recalls,f1s):
         if self.filtered:
-            path='eval_NB-BOW-FV.txt'
+            path= 'results/eval_NB-BOW-FV.txt'
         else:
-            path='eval_NB-BOW-OV.txt'
+            path= 'results/eval_NB-BOW-OV.txt'
         with open(path,'+w') as f:
             f.write('{:.4f}\n'.format(acc))
             f.write('{:.4f}  {:.4f}\n'.format(precisions[0],precisions[1]))
