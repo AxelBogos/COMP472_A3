@@ -24,31 +24,49 @@ Execute the main() function of ```main.py```to execute  ```GNB.runGNB()``` and `
 
 These files are organized in a directory structure as follows: 
 ```
-./root
-│ main.py
-| model.bin
-│ __init__.py    
+./COMP354-Project
+ 
 │ README.md
 |   
-└───data
-|   │   covid_test_public.tsv
-│   |   covid_training.tsv
-└───GNB
-│   │ NaiveBayesClassifier.py
-│   │ runGNB.py
-└───LSTM
-|   |runLSTM.py
-|   └───src 
-│   │   │model.py
-│   │   │util.py
-└───results
-│   │eval_lstm.txt
-│   │eval_NB-BOW-FV.txt
-│   │eval_NB-BOW-OV.txt
-│   │trace_LSTM.txt
-│   │trace_NB-BOW-FV.txt
-│   │trace_NB-BOW-OV.txt
+└───javadoc (Contains all files relevent to the javadocs)
+|   │   index.html
+│   |   ...
+└───out
+|   |
+|   └───artificats (contains .jar) 
+|   |     |
+|   |     COMP354-Project.jar
+|   |     
+|   └───production (contain compiled classes)
+|   |    |
+|   |    └───main 
+|   |    |   | *.class
+|   |    | 
+|   |    └───test 
+|   |        | *.class
+|   |    
+└───src
+│   │ 
+|   └───.com.project 
+│   │   |
+│   │ 
+|   └───main.java.com.project 
+│   │   |
+│   │   └───controller 
+│   │   |   | EditsController.java
+│   │   └───init
+│   │   |   | Main.java
+│   │   └───jframe
+│   │   |   | JCheckBoxTree.java
+│   │   |   | TextEditor.java
+│   │   └───model
+│   │   |   | Edit.java
+│   │   |   | Group.java
+│   │   └───util
+│   │       | Util.java
+│   │ 
+|   └───test.java.com.project 
+│           | EditsControllerTest.java
 
 ```
-
 ---
